@@ -43,6 +43,7 @@ html(lang='en')
                             li
                                 a(href='navbar.html"') Navbar
                             li
+
                                 a(href='cards.html') Cards
                     li.nav-item(data-toggle='tooltip', data-placement='right', title='Example Pages')
                         a.nav-link.nav-link-collapse.collapsed(data-toggle='collapse', href='#collapseExamplePages', data-parent='#exampleAccordion')
@@ -256,160 +257,37 @@ html(lang='en')
                             .card-body
                                 canvas#myPieChart(width='100%', height='100')
                             .card-footer.small.text-muted Updated yesterday at 11:59 PM
-                        // Example Notifications Card
-                        .card.mb-3
-                            .card-header
-                                i.fa.fa-bell-o
-                                |  Feed Example
-                            .list-group.list-group-flush.small
-                                a.list-group-item.list-group-item-action(href='#')
-                                    .media
-                                        img.d-flex.mr-3.rounded-circle(src='http://placehold.it/45x45', alt='')
-                                        .media-body
-                                            strong David Miller
-                                            | posted a new article to
-                                            strong David Miller Website
-                                            | .
-                                            .text-muted.smaller Today at 5:43 PM - 5m ago
-                                a.list-group-item.list-group-item-action(href='#')
-                                    .media
-                                        img.d-flex.mr-3.rounded-circle(src='http://placehold.it/45x45', alt='')
-                                        .media-body
-                                            strong Samantha King
-                                            | sent you a new message!
-                                            .text-muted.smaller Today at 4:37 PM - 1hr ago
-                                a.list-group-item.list-group-item-action(href='#')
-                                    .media
-                                        img.d-flex.mr-3.rounded-circle(src='http://placehold.it/45x45', alt='')
-                                        .media-body
-                                            strong Jeffery Wellings
-                                            | added a new photo to the album
-                                            strong Beach
-                                            | .
-                                            .text-muted.smaller Today at 4:31 PM - 1hr ago
-                                a.list-group-item.list-group-item-action(href='#')
-                                    .media
-                                        img.d-flex.mr-3.rounded-circle(src='http://placehold.it/45x45', alt='')
-                                        .media-body
-                                            i.fa.fa-code-fork
-                                            strong Monica Dennis
-                                            | forked the
-                                            strong startbootstrap-sb-admin
-                                            | repository on
-                                            strong GitHub
-                                            | .
-                                            .text-muted.smaller Today at 3:54 PM - 2hrs ago
-                                a.list-group-item.list-group-item-action(href='#') View all activity...
-                            .card-footer.small.text-muted Updated yesterday at 11:59 PM
-                // Example DataTables Card
+                       // Example DataTables Card
                 .card.mb-3
                     .card-header
                         i.fa.fa-table
                         |  Data Table Example
                     .card-body
+                        h2 Tüm Araçlar için Bilgiler
                         .table-responsive
                             table#dataTable.table.table-bordered(width='100%', cellspacing='0')
                                 thead
                                     tr
-                                        th Id
-                                        th DeviceName
-                                        th Value
-                                        th Age
-                                        th Start date
-                                        th Salary
+                                        th Araç No
+                                        th Kullanıcı
+                                        th Ağırlık
+                                        th Longtitude
+                                        th Latitude
                                 tfoot
                                     tr
-                                        th Name
-                                        th Position
-                                        th Office
-                                        th Age
-                                        th Start date
-                                        th Salary
+                                        th Araç No
+                                        th Kullanıcı
+                                        th Ağırlık
+                                        th Longtitude
+                                        th Latitude
                                 tbody
-                                    tr
-                                        td #{id}
-                                        td System Architect
-                                        td Edinburgh
-                                        td 61
-                                        td 2011/04/25
-                                        td $320,800
-                                    tr
-                                        td Garrett Winters
-                                        td Accountant
-                                        td Tokyo
-                                        td 63
-                                        td 2011/07/25
-                                        td $170,750
-                                    tr
-                                        td Ashton Cox
-                                        td Junior Technical Author
-                                        td San Francisco
-                                        td 66
-                                        td 2009/01/12
-                                        td $86,000
-                                    tr
-                                        td Cedric Kelly
-                                        td Senior Javascript Developer
-                                        td Edinburgh
-                                        td 22
-                                        td 2012/03/29
-                                        td $433,060
-                                    tr
-                                        td Airi Satou
-                                        td Accountant
-                                        td Tokyo
-                                        td 33
-                                        td 2008/11/28
-                                        td $162,700
-                                    tr
-                                        td Brielle Williamson
-                                        td Integration Specialist
-                                        td New York
-                                        td 61
-                                        td 2012/12/02
-                                        td $372,000
-                                    tr
-                                        td Herrod Chandler
-                                        td Sales Assistant
-                                        td San Francisco
-                                        td 59
-                                        td 2012/08/06
-                                        td $137,500
-                                    tr
-                                        td Rhona Davidson
-                                        td Integration Specialist
-                                        td Tokyo
-                                        td 55
-                                        td 2010/10/14
-                                        td $327,900
-                                    tr
-                                        td Colleen Hurst
-                                        td Javascript Developer
-                                        td San Francisco
-                                        td 39
-                                        td 2009/09/15
-                                        td $205,500
-                                    tr
-                                        td Sonya Frost
-                                        td Software Engineer
-                                        td Edinburgh
-                                        td 23
-                                        td 2008/12/13
-                                        td $103,600
-                                    tr
-                                        td Jena Gaines
-                                        td Office Manager
-                                        td London
-                                        td 30
-                                        td 2008/12/19
-                                        td $90,560
-                                    tr
-                                        td Donna Snider
-                                        td Customer Support
-                                        td New York
-                                        td 27
-                                        td 2011/01/25
-                                        td $112,000
+                                    each item, i in structeredData
+                                        tr
+                                            td= '001' + i
+                                            td= "Kullanıcı " + i
+                                            td= item.agirlik
+                                            td= item.lon
+                                            td= item.lat
                     .card-footer.small.text-muted Updated yesterday at 11:59 PM
             // /.container-fluid
             // /.content-wrapper

@@ -343,7 +343,7 @@
     <script>
 
         var locations = [
-            ['Bondi Beach', -33.890542, 151.274856, 4],
+            ['Bondi Beach',41.0831, 28.98233],
             ['Coogee Beach', -33.923036, 151.259052, 5],
             ['Cronulla Beach', -34.028249, 151.157507, 3],
             ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
@@ -351,17 +351,17 @@
         ];
 
         var triangleCoords = [
-            {lat: 25.774, lng: -80.190},
-            {lat: 18.466, lng: -66.118},
-            {lat: 32.321, lng: -64.757},
-            {lat: 25.774, lng: -80.190}
+            {lat: 41.083414, lng: 28.980368},
+            {lat: 41.083414, lng: 28.980468},
+            {lat: 41.083883, lng: 28.980885},
+            {lat: 41.083883, lng: 28.980785}
         ];
 
         function initMap() {
 
             var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 10,
-                center: new google.maps.LatLng(-33.92, 151.25),
+                zoom: 18,
+                center: new google.maps.LatLng(41.0831, 28.98233),
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             });
 
