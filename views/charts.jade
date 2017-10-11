@@ -13,6 +13,10 @@ html(lang='en')
         link(href='assets/vendor/font-awesome/css/font-awesome.min.css', rel='stylesheet', type='text/css')
         // Custom styles for this template
         link(href='assets/css/sb-admin.css', rel='stylesheet')
+
+        // Core plugin JavaScript
+        script(src='assets/vendor/jquery/jquery.min.js')
+        script(src='assets/vendor/jquery-easing/jquery.easing.min.js')
     body#page-top.fixed-nav.sticky-footer.bg-dark
         // Navigation
         nav#mainNav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
@@ -172,7 +176,7 @@ html(lang='en')
                 .card.mb-3
                     .card-header
                         i.fa.fa-area-chart
-                        |  Area Chart Example
+                        |  Aylık Taşınan Toplam Yük Miktarı
                     .card-body
                         canvas#myAreaChart(width='100%', height='30')
                     .card-footer.small.text-muted Updated yesterday at 11:59 PM
@@ -264,139 +268,6 @@ html(lang='en')
                                 th Start date
                                 th Salary
                         tbody
-                            tr
-                                td Gavin Joyce
-                                td Developer
-                                td Edinburgh
-                                td 42
-                                td 2010/12/22
-                                td $92,575
-                            tr
-                                td Jennifer Chang
-                                td Regional Director
-                                td Singapore
-                                td 28
-                                td 2010/11/14
-                                td $357,650
-                            tr
-                                td Brenden Wagner
-                                td Software Engineer
-                                td San Francisco
-                                td 28
-                                td 2011/06/07
-                                td $206,850
-                            tr
-                                td Fiona Green
-                                td Chief Operating Officer (COO)
-                                td San Francisco
-                                td 48
-                                td 2010/03/11
-                                td $850,000
-                            tr
-                                td Shou Itou
-                                td Regional Marketing
-                                td Tokyo
-                                td 20
-                                td 2011/08/14
-                                td $163,000
-                            tr
-                                td Michelle House
-                                td Integration Specialist
-                                td Sidney
-                                td 37
-                                td 2011/06/02
-                                td $95,400
-                            tr
-                                td Suki Burks
-                                td Developer
-                                td London
-                                td 53
-                                td 2009/10/22
-                                td $114,500
-                            tr
-                                td Prescott Bartlett
-                                td Technical Author
-                                td London
-                                td 27
-                                td 2011/05/07
-                                td $145,000
-                            tr
-                                td Gavin Cortez
-                                td Team Leader
-                                td San Francisco
-                                td 22
-                                td 2008/10/26
-                                td $235,500
-                            tr
-                                td Martena Mccray
-                                td Post-Sales support
-                                td Edinburgh
-                                td 46
-                                td 2011/03/09
-                                td $324,050
-                            tr
-                                td Unity Butler
-                                td Marketing Designer
-                                td San Francisco
-                                td 47
-                                td 2009/12/09
-                                td $85,675
-                            tr
-                                td Howard Hatfield
-                                td Office Manager
-                                td San Francisco
-                                td 51
-                                td 2008/12/16
-                                td $164,500
-                            tr
-                                td Hope Fuentes
-                                td Secretary
-                                td San Francisco
-                                td 41
-                                td 2010/02/12
-                                td $109,850
-                            tr
-                                td Vivian Harrell
-                                td Financial Controller
-                                td San Francisco
-                                td 62
-                                td 2009/02/14
-                                td $452,500
-                            tr
-                                td Timothy Mooney
-                                td Office Manager
-                                td London
-                                td 37
-                                td 2008/12/11
-                                td $136,200
-                            tr
-                                td Jackson Bradshaw
-                                td Director
-                                td New York
-                                td 65
-                                td 2008/09/26
-                                td $645,750
-                            tr
-                                td Olivia Liang
-                                td Support Engineer
-                                td Singapore
-                                td 64
-                                td 2011/02/03
-                                td $234,500
-                            tr
-                                td Finn Camacho
-                                td Support Engineer
-                                td San Francisco
-                                td 47
-                                td 2009/07/07
-                                td $87,500
-                            tr
-                                td Donna Snider
-                                td Customer Support
-                                td New York
-                                td 27
-                                td 2011/01/25
-                                td $112,000
             .card-footer.small.text-muted Updated yesterday at 11:59 PM
     // /.container-fluid
     // /.content-wrapper
@@ -419,12 +290,36 @@ html(lang='en')
                 .modal-footer
                     button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
                     a.btn.btn-primary(href='login.html') Logout
+
+    script.
+        $(document).ready(
+            loadData()
+        )
+
+        function loadData() {
+            $.ajax({
+                method: "GET",
+                url: "data.html",
+                dataType: "json",
+            })
+                .done(function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        $('#dataTable').append(
+                            '<tr>' +
+                            '<td>' + '001' + i + '</td>' +
+                            '<td>' + 'Kullanıcı ' + i + '</td>' +
+                            '<td>' + data[i].agirlik + '</td>' +
+                            '<td>' + data[i].lon + '</td>' +
+                            '<td>' + data[i].lat + '</td>' +
+                            '</tr>'
+                        )
+                    }
+                })
+        }
+
     // Bootstrap core JavaScript
-    script(src='assets/vendor/jquery/jquery.min.js')
     script(src='assets/vendor/popper/popper.min.js')
     script(src='assets/vendor/bootstrap/js/bootstrap.min.js')
-    // Core plugin JavaScript
-    script(src='assets/vendor/jquery-easing/jquery.easing.min.js')
     // Page level plugin JavaScript
     script(src='assets/vendor/datatables/jquery.dataTables.js')
     script(src='assets/vendor/datatables/dataTables.bootstrap4.js')

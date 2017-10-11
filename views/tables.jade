@@ -15,6 +15,11 @@ html(lang='en')
         link(href='assets/vendor/datatables/dataTables.bootstrap4.css', rel='stylesheet')
         // Custom styles for this template
         link(href='assets/css/sb-admin.css', rel='stylesheet')
+        // Core plugin JavaScript
+        script(src='assets/vendor/jquery/jquery.min.js')
+        script(src='assets/vendor/jquery-easing/jquery.easing.min.js')
+        script(src='assets/vendor/datatables/jquery.dataTables.js')
+
     body#page-top.fixed-nav.sticky-footer.bg-dark
         // Navigation
         nav#mainNav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
@@ -164,11 +169,6 @@ html(lang='en')
                             i.fa.fa-fw.fa-sign-out
                             | Logout
 
-        div
-            button(type='button', onclick='loadDoc()') Change Content
-        p#demo Let AJAX change this text.
-
-
         .content-wrapper
             .container-fluid
                 // Breadcrumbs
@@ -200,15 +200,6 @@ html(lang='en')
                                         th Longtitude
                                         th Latitude
                                 tbody
-                                    each item, i in structeredData
-                                        tr
-                                            td= '001' + i
-                                            td= "Kullanıcı " +  i
-                                            td= item.agirlik
-                                            td= item.lon
-                                            td= item.lat
-
-
                     .card-footer.small.text-muted Updated yesterday at 11:59 PM
             // /.container-fluid
             // /.content-wrapper
@@ -231,27 +222,41 @@ html(lang='en')
                         .modal-footer
                             button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
                             a.btn.btn-primary(href='login.html') Logout
-            script.
-                function loadDoc() {
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function() {
-                        if (this.readyState == 4 && this.status == 200) {
-                            document.getElementById("demo").innerHTML = this.responseText;
-                        }
-                    };
-                    xhttp.open("GET", "text.txt", true);
-                    xhttp.send();
-                }
+
+                table#demo
+
+            //Ajax script to request data
             // Bootstrap core JavaScript
-            script(src='assets/vendor/jquery/jquery.min.js')
             script(src='assets/vendor/popper/popper.min.js')
             script(src='assets/vendor/bootstrap/js/bootstrap.min.js')
-            // Core plugin JavaScript
-            script(src='assets/vendor/jquery-easing/jquery.easing.min.js')
             // Page level plugin JavaScript
-            script(src='assets/vendor/datatables/jquery.dataTables.js')
             script(src='assets/vendor/datatables/dataTables.bootstrap4.js')
             // Custom scripts for all pages
             script(src='assets/js/sb-admin.min.js')
             // Custom scripts for this page
             script(src='assets/js/sb-admin-datatables.min.js')
+            script.
+                $(document).ready(
+                    loadData()
+                )
+
+                function loadData() {
+                    $.ajax({
+                        method: "GET",
+                        url: "data.html",
+                        dataType: "json",
+                    })
+                        .done(function (data) {
+                            for(var i = 0; i < data.length; i++){
+                                $('#dataTable').append(
+                                    '<tr>' +
+                                    '<td>'+ '001'+ i +'</td>' +
+                                    '<td>'+ 'Kullanıcı ' + i +'</td>' +
+                                    '<td>'+ data[i].agirlik +'</td>' +
+                                    '<td>' + data[i].lon +'</td>' +
+                                    '<td>' + data[i].lat +'</td>' +
+                                    '</tr>'
+                                )
+                            }
+                        })
+                }

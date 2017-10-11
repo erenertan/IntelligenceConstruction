@@ -15,6 +15,19 @@ html(lang='en')
         link(href='assets/vendor/datatables/dataTables.bootstrap4.css', rel='stylesheet')
         // Custom styles for this template
         link(href='assets/css/sb-admin.css', rel='stylesheet')
+
+        // Core plugin JavaScript
+        script(src='assets/vendor/jquery/jquery.min.js')
+        script(src='assets/vendor/jquery-easing/jquery.easing.min.js')
+        script(src='assets/vendor/chart.js/Chart.min.js')
+        //script(src='assets/js/sb-admin-charts.min.js')
+
+        style.
+            #map {
+                height: 500px;
+                width: 100%;
+            }
+
     body#page-top.fixed-nav.sticky-footer.bg-dark
         // Navigation
         nav#mainNav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
@@ -43,7 +56,6 @@ html(lang='en')
                             li
                                 a(href='navbar.html"') Navbar
                             li
-
                                 a(href='cards.html') Cards
                     li.nav-item(data-toggle='tooltip', data-placement='right', title='Example Pages')
                         a.nav-link.nav-link-collapse.collapsed(data-toggle='collapse', href='#collapseExamplePages', data-parent='#exampleAccordion')
@@ -219,10 +231,10 @@ html(lang='en')
                         i.fa.fa-area-chart
                         |  Area Chart Example
                     .card-body
+                        h4 Günlük Toplam Taşınan Yük Miktarı
                         canvas#myAreaChart(width='100%', height='30')
                     .card-footer.small.text-muted Updated yesterday at 11:59 PM
                 .row
-
                     .col-lg-8
                         // Example Bar Chart Card
                         .card.mb-3
@@ -232,22 +244,20 @@ html(lang='en')
                             .card-body
                                 .row
                                     .col-sm-8.my-auto
+                                        h4 Aylık Taşınan Yük Miktarı
                                         canvas#myBarChart(width='100', height='50')
                                     .col-sm-4.text-center.my-auto
                                         .h4.mb-0.text-primary $34,693
-                                        .small.text-muted YTD Revenue
+                                        .small.text-muted YTD Gelir
                                         hr
                                         .h4.mb-0.text-warning $18,474
-                                        .small.text-muted YTD Expenses
+                                        .small.text-muted YTD Giderler
                                         hr
                                         .h4.mb-0.text-success $16,219
-                                        .small.text-muted YTD Margin
+                                        .small.text-muted YTD Kazanç
                             .card-footer.small.text-muted Updated yesterday at 11:59 PM
 
-
-
                         // /Card Columns
-
                     .col-lg-4
                         // Example Pie Chart Card
                         .card.mb-3
@@ -257,7 +267,244 @@ html(lang='en')
                             .card-body
                                 canvas#myPieChart(width='100%', height='100')
                             .card-footer.small.text-muted Updated yesterday at 11:59 PM
-                       // Example DataTables Card
+
+                script.
+                    $(document).ready(function () {
+                        var dataFromDB;
+                        function loadData() {
+                            $.ajax({
+                                method: "GET",
+                                url: "data.html",
+                                dataType: "json",
+                            }).done(function (data) {
+                                var $dataTable = $('#tableBody').empty();
+                                var number = 0.001;
+                                //Returning a new array contains locations values from data array.
+                                initMap(data.map(function (it, i) {
+                                    return [i, it.lon + i, it.lat + i];
+                                    number += number;
+                                }));
+
+                                initLineChart(data.map(function (it) {
+                                    return it.lat
+                                }))
+
+                                initBarChart(data.map(function (it) {
+                                    return it.lat
+                                }))
+
+                                initPieChart(data.map(function (it) {
+                                    return it.lat
+                                }))
+
+                                for (var i = 0; i < data.length; i++) {
+                                    $dataTable.append(
+                                        '<tr class="tableBody">' +
+                                        '<td>' + '001' + i + '</td>' +
+                                        '<td>' + 'Kullanıcı ' + i + '</td>' +
+                                        '<td>' + data[i].agirlik + '</td>' +
+                                        '<td>' + data[i].lon + '</td>' +
+                                        '<td>' + data[i].lat + '</td>' +
+                                        '</tr>'
+                                    )
+                                }
+                            })
+                        }
+
+                        setInterval(loadData, 5000);
+
+
+                        function initLineChart(data) {
+                            var ctx = document.getElementById("myAreaChart");
+                            var myLineChart = new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: ["Mar 1", "Mar 2", "Mar 3", "Mar 4", "Mar 5", "Mar 6", "Mar 7", "Mar 8", "Mar 9", "Mar 10", "Mar 11", "Mar 12", "Mar 13"],
+                                    datasets: [{
+                                        label: "Sessions",
+                                        lineTension: 0.3,
+                                        backgroundColor: "rgba(2,117,216,0.2)",
+                                        borderColor: "rgba(2,117,216,1)",
+                                        pointRadius: 5,
+                                        pointBackgroundColor: "rgba(2,117,216,1)",
+                                        pointBorderColor: "rgba(255,255,255,0.8)",
+                                        pointHoverRadius: 5,
+                                        pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                                        pointHitRadius: 20,
+                                        pointBorderWidth: 2,
+                                        data: data,
+                                    }],
+                                },
+                                options: {
+                                    scales: {
+                                        xAxes: [{
+                                            time: {
+                                                unit: 'date'
+                                            },
+                                            gridLines: {
+                                                display: false
+                                            },
+                                            ticks: {
+                                                maxTicksLimit: 7
+                                            }
+                                        }],
+                                        yAxes: [{
+                                            ticks: {
+                                                min: 0,
+                                                max: 3000,
+                                                maxTicksLimit: 5
+                                            },
+                                            gridLines: {
+                                                color: "rgba(0, 0, 0, .125)",
+                                            }
+                                        }],
+                                    },
+                                    legend: {
+                                        display: false
+                                    }
+                                }
+                            })
+                        }
+                    })
+
+                    // -- Bar Chart Example
+                    function initBarChart(data) {
+                        var ctx = document.getElementById("myBarChart");
+                        var myLineChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran"],
+                                datasets: [{
+                                    label: "Revenue",
+                                    backgroundColor: "rgba(2,117,216,1)",
+                                    borderColor: "rgba(2,117,216,1)",
+                                    data: data,
+                                }],
+                            },
+                            options: {
+                                scales: {
+                                    xAxes: [{
+                                        time: {
+                                            unit: 'month'
+                                        },
+                                        gridLines: {
+                                            display: false
+                                        },
+                                        ticks: {
+                                            maxTicksLimit: 6
+                                        }
+                                    }],
+                                    yAxes: [{
+                                        ticks: {
+                                            min: 0,
+                                            max: 1000,
+                                            maxTicksLimit: 5
+                                        },
+                                        gridLines: {
+                                            display: true
+                                        }
+                                    }],
+                                },
+                                legend: {
+                                    display: false
+                                }
+                            }
+                        });
+                    }
+
+                    //Function to create pie chart
+                    function initPieChart(data) {
+                        // -- Pie Chart Example
+                        var ctx = document.getElementById("myPieChart");
+                        var myPieChart = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: ["Blue", "Red", "Yellow", "Green"],
+                                datasets: [{
+                                    data: data,
+                                    backgroundColor: ['#007bff', '#dc3545', '#ffc107', '#28a745','#007bff', '#dc3545', '#ffc107', '#28a745'],
+                                }],
+                            },
+                        });
+
+                    }
+
+                //Google maps example hear.
+                .card.mb-3
+                    .card-header
+                        i.fa.fa-area-chart
+                        |  Google Maps Example
+
+                    .card-body
+                        h3 My Google Maps Demo
+                        #map
+                        script.
+
+                            //To mark some places in map.
+                            var locationsInMarkedArea
+
+                            var map, infowindow, marker, i;
+
+                            function initMap(locations) {
+
+
+
+                                //Locations: contains lantitute and longtitude values from data.
+                                if (typeof locations === 'undefined') {
+                                    locations = ([
+                                        ['Peakup', 41.0831, 28.98233],
+                                        ['Coogee Beach', -33.923036, 151.259052, 5],
+                                        ['Cronulla Beach', -34.028249, 151.157507, 3],
+                                        ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
+                                        ['Maroubra Beach', -33.950198, 151.259302, 1]
+                                    ]);
+                                }
+
+                                map = map || (new google.maps.Map(document.getElementById('map'), {
+                                    zoom: 15,
+                                    center: new google.maps.LatLng(41.0831, 28.98233),
+                                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                                }));
+                                infowindow = infowindow || new google.maps.InfoWindow();
+
+                                for (i = 0; i < locations.length; i++) {
+                                    marker = new google.maps.Marker({
+                                        //Giving lat and long values for each object in locations array.
+                                        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                                        map: map
+                                    });
+                                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                                        return function () {
+                                            infowindow.setContent(locations[i][0]);
+                                            infowindow.open(map, marker);
+                                        }
+                                    })(marker, i));
+
+                                    //Lat and long variables to mark areas in map.
+                                    locationsInMarkedArea = [
+                                        {lat: locations[i][1] - 0.001, lng: locations[i][2] - 0.001},
+                                        {lat: locations[i][1], lng:locations[i][2] + 0.008},
+                                        {lat: locations[i][1] + 0.002, lng:locations[i][2]+ 0.008},
+                                        {lat: locations[i][1] + 0.002, lng:locations[i][2]}
+                                    ];
+
+                                    // Construct the polygon.
+                                    var markedAreaInMap = new google.maps.Polygon({
+                                        paths: locationsInMarkedArea,
+                                        strokeColor: '#FF0000',
+                                        strokeOpacity: 0.8,
+                                        strokeWeight: 2,
+                                        fillColor: '#FF0000',
+                                        fillOpacity: 0.35
+                                    });
+                                    markedAreaInMap.setMap(map);
+                                }
+                            }
+                    .card-footer.small.text-muted Updated yesterday at 11:59 PM
+                .row
+
+
+                        // Example DataTables Card
                 .card.mb-3
                     .card-header
                         i.fa.fa-table
@@ -280,14 +527,7 @@ html(lang='en')
                                         th Ağırlık
                                         th Longtitude
                                         th Latitude
-                                tbody
-                                    each item, i in structeredData
-                                        tr
-                                            td= '001' + i
-                                            td= "Kullanıcı " + i
-                                            td= item.agirlik
-                                            td= item.lon
-                                            td= item.lat
+                                tbody#tableBody
                     .card-footer.small.text-muted Updated yesterday at 11:59 PM
             // /.container-fluid
             // /.content-wrapper
@@ -310,18 +550,18 @@ html(lang='en')
                         .modal-footer
                             button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
                             a.btn.btn-primary(href='views/startbootstrap-sb-admin-gh-pages/login.html') Logout
+
+
             // Bootstrap core JavaScript
-            script(src='assets/vendor/jquery/jquery.min.js')
             script(src='assets/vendor/popper/popper.min.js')
             script(src='assets/vendor/bootstrap/js/bootstrap.min.js')
-            // Core plugin JavaScript
-            script(src='assets/vendor/jquery-easing/jquery.easing.min.js')
             // Page level plugin JavaScript
-            script(src='assets/vendor/chart.js/Chart.min.js')
+
             script(src='assets/vendor/datatables/jquery.dataTables.js')
             script(src='assets/vendor/datatables/dataTables.bootstrap4.js')
             // Custom scripts for all pages
             script(src='assets/js/sb-admin.min.js')
             // Custom scripts for this page
             script(src='assets/js/sb-admin-datatables.min.js')
-            script(src='assets/js/sb-admin-charts.min.js')
+            //Google maps script
+            script(async='', defer='', src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA6zq0hXtsOpHcSNK0lsoULFjjMXf8GbXI&callback=initMap')
