@@ -1,3 +1,19 @@
+/*
+      ___           ___           ___
+     /__/\         /  /\         /  /\
+     \  \:\       /  /:/_       /  /:/_
+      \__\:\     /  /:/ /\     /  /:/ /\
+  ___ /  /::\   /  /:/ /:/_   /  /:/ /:/_
+ /__/\  /:/\:\ /__/:/ /:/ /\ /__/:/ /:/ /\
+ \  \:\/:/__\/ \  \:\/:/ /:/ \  \:\/:/ /:/
+  \  \::/       \  \::/ /:/   \  \::/ /:/
+   \  \:\        \  \:\/:/     \  \:\/:/
+    \  \:\        \  \::/       \  \::/
+     \__\/         \__\/         \__\/
+
+*/
+
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -11,6 +27,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
 
 
 // view engine setup
