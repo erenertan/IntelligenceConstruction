@@ -277,6 +277,13 @@ html(lang='en')
                                 url: "data.html",
                                 dataType: "json",
                             }).done(function (data) {
+                                var lineChartData = []
+
+                                for(var i = 0; i < 13; i++) {
+                                    lineChartData[i] = data[data.length - i -1];
+                                }
+                                console.log(lineChartData)
+
                                 var $dataTable = $('#tableBody').empty();
                                 var number = 0.001;
                                 //Returning a new array contains locations values from data array.
@@ -285,8 +292,8 @@ html(lang='en')
                                     number += number;
                                 }));
 
-                                initLineChart(data.map(function (it) {
-                                    return it.lat
+                                initLineChart(lineChartData.map(function (it) {
+                                    return  it.agirlik
                                 }))
 
                                 initBarChart(data.map(function (it) {
@@ -300,7 +307,7 @@ html(lang='en')
                                 for (var i = 0; i < data.length; i++) {
                                     $dataTable.append(
                                         '<tr class="tableBody">' +
-                                        '<td>' + '001' + i + '</td>' +
+                                        '<td>' + i + '</td>' +
                                         '<td>' + 'Kullanıcı ' + i + '</td>' +
                                         '<td>' + data[i].agirlik + '</td>' +
                                         '<td>' + data[i].lon + '</td>' +
@@ -351,7 +358,7 @@ html(lang='en')
                                         yAxes: [{
                                             ticks: {
                                                 min: 0,
-                                                max: 3000,
+                                                max: 50,
                                                 maxTicksLimit: 5
                                             },
                                             gridLines: {
@@ -461,7 +468,7 @@ html(lang='en')
                                 }
 
                                 map = map || (new google.maps.Map(document.getElementById('map'), {
-                                    zoom: 15,
+                                    zoom: 3,
                                     center: new google.maps.LatLng(41.0831, 28.98233),
                                     mapTypeId: google.maps.MapTypeId.ROADMAP
                                 }));

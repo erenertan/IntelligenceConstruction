@@ -79,23 +79,59 @@ function queryCollection() {
 
             var items = [];
 
+    //var itemObjectModel = function (agirlik, lat, lon) {
+    //    this.agirlik = agirlik;
+    //    this.lat = lat;
+    //    this.lon = lon;
+    //};
+
             var itemObjectModel = function (agirlik, lat, lon) {
-                this.agirlik = agirlik;
-                this.lat = lat;
-                this.lon = lon;
+                var self = this;
+                self.agirlik = agirlik;
+                self.lat = lat;
+                self.lon = lon;
+                self.isValid = function(){
+                    return self.agirlik && self.lat && self.lon;
+                };
+                return self;
+            };
 
+            var tempModel = new itemObjectModel();
+
+    //for (var  i = 0; i + 3 < results.length; i+=3){
+        for (var  i = 0; i < results.length; i++){
+
+            //var moduleOfIndex = i%3;
+                // take params name with nameOfParams[i%3 + 2]
+
+            //for (var x in results[0].params) {
+            //    console.log('First param: ', results[0].params)
+            //}
+
+            // if (results[0].params.toString())
+            //if  (moduleOfIndex == 0) {
+                // console.log(results[i + 1].params)
+                // console.log('Result length: ', results.length, 'i: ', i)
+                // console.log(results[i].params.nameOfParams[2], results[i+1].params.GPS_LAT, results[i+2].params.GPS_LON)
+            var params = results[i].params;
+            if(params.Agirlik)
+                tempModel.agirlik = params.Agirlik;
+            if(params.GPS_LAT)
+                tempModel.lat = params.GPS_LAT;
+            if(params.GPS_LON)
+                tempModel.lon = params.GPS_LON;
+            if(tempModel.isValid())
+            {
+                delete tempModel.isValid;
+                items.push(tempModel);
+                tempModel = new itemObjectModel();
             }
-
-        for (var  i = 0; i < results.length; i+=3){
-                var moduleOfIndex = i%3;
-
-                // console.log(results[i].params.Agirlik)
-            if  (moduleOfIndex == 0) {
-                items.push(new itemObjectModel(results[i].params.Agirlik, results[i+1].params.GPS_LAT, results[i+2].params.GPS_LON))
-            }
+                //items.push(new itemObjectModel(results[i].params.Agirlik, results[i+ 1].params.GPS_LAT, results[i+ 2].params.GPS_LON))
+            //}
         }
 
         // console.log(items)
+        console.log('Length of items: ', items.length)
     resolve(items);
 }
     resolve(results);
