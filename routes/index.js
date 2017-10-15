@@ -9,6 +9,7 @@ var query = model.queryCollection;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+    //Return
     query().then(function(items){
         res.render('index', { title: 'My Dashboard', structeredData: items});
         console.log(items)

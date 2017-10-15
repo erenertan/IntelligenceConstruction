@@ -47,20 +47,21 @@ function getCollection() {
 
     return new Promise((resolve, reject) => {
         client.readCollection(collectionUrl, (err, result) => {
-        if (err) {
-            if (err.code == HttpStatusCodes.NOTFOUND) {
-                client.createCollection(databaseUrl, config.collection, { offerThroughput: 400 }, (err, created) => {
-                    if (err) reject(err)
-                    else resolve(created);
-            });
-            } else {
-                reject(err);
+            if (err) {
+                if (err.code == HttpStatusCodes.NOTFOUND) {
+                    client.createCollection(databaseUrl, config.collection, { offerThroughput: 400 }, (err, created) => {
+                        if (err) reject(err)
+                        else resolve(created);
+                });
+                } else {
+                    reject(err);
+                }
             }
-        } else {
-            resolve(result);
-}
-});
-});
+            else {
+                resolve(result);
+            }
+        });
+    });
 }
 
 /**
@@ -72,71 +73,56 @@ function queryCollection() {
     return new Promise((resolve, reject) => {
         client.queryDocuments(
         collectionUrl,
+        //Getting all entries
         'SELECT * FROM root'
-    ).toArray((err, results) => {
-        if (err) reject(err)
-        else {
+        ).toArray((err, results) => {
+            if (err) reject(err)
+                else {
 
-            var items = [];
+                    //Array to push all values from db and use in view of model.
+                    var items = [];
 
-    //var itemObjectModel = function (agirlik, lat, lon) {
-    //    this.agirlik = agirlik;
-    //    this.lat = lat;
-    //    this.lon = lon;
-    //};
+                    //Values from db are coming separated in order Agirlik, GPS_LAT, GPS_LON.
+                    //To make them these together object model created.
+                    var itemObjectModel = function (agirlik, lat, lon) {
+                        var self = this;
+                        self.agirlik = agirlik;
+                        self.lat = lat;
+                        self.lon = lon;
+                        //if object model valid return it.
+                        self.isValid = function(){
+                            return self.agirlik && self.lat && self.lon;
+                        };
+                        return self;
+                    };
 
-            var itemObjectModel = function (agirlik, lat, lon) {
-                var self = this;
-                self.agirlik = agirlik;
-                self.lat = lat;
-                self.lon = lon;
-                self.isValid = function(){
-                    return self.agirlik && self.lat && self.lon;
-                };
-                return self;
-            };
+                    var tempModel = new itemObjectModel();
 
-            var tempModel = new itemObjectModel();
+                    //Pusing values from db params. If valid push to items array.
+                    for (var  i = 0; i < results.length; i++){
+                        var params = results[i].params;
+                        if(params.Agirlik)
+                            tempModel.agirlik = params.Agirlik;
+                        if(params.GPS_LAT)
+                            tempModel.lat = params.GPS_LAT;
+                        if(params.GPS_LON)
+                            tempModel.lon = params.GPS_LON;
+                        if(tempModel.isValid())
+                        {
+                            delete tempModel.isValid;
+                            items.push(tempModel);
+                            tempModel = new itemObjectModel();
+                        }
 
-    //for (var  i = 0; i + 3 < results.length; i+=3){
-        for (var  i = 0; i < results.length; i++){
+                    }
 
-            //var moduleOfIndex = i%3;
-                // take params name with nameOfParams[i%3 + 2]
-
-            //for (var x in results[0].params) {
-            //    console.log('First param: ', results[0].params)
-            //}
-
-            // if (results[0].params.toString())
-            //if  (moduleOfIndex == 0) {
-                // console.log(results[i + 1].params)
-                // console.log('Result length: ', results.length, 'i: ', i)
-                // console.log(results[i].params.nameOfParams[2], results[i+1].params.GPS_LAT, results[i+2].params.GPS_LON)
-            var params = results[i].params;
-            if(params.Agirlik)
-                tempModel.agirlik = params.Agirlik;
-            if(params.GPS_LAT)
-                tempModel.lat = params.GPS_LAT;
-            if(params.GPS_LON)
-                tempModel.lon = params.GPS_LON;
-            if(tempModel.isValid())
-            {
-                delete tempModel.isValid;
-                items.push(tempModel);
-                tempModel = new itemObjectModel();
-            }
-                //items.push(new itemObjectModel(results[i].params.Agirlik, results[i+ 1].params.GPS_LAT, results[i+ 2].params.GPS_LON))
-            //}
-        }
-
-        // console.log(items)
-        console.log('Length of items: ', items.length)
-    resolve(items);
-}
-    resolve(results);
-});
-});
+                    // console.log(items)
+                    console.log('Length of items: ', items.length)
+                    resolve(items);
+                }
+            resolve(results);
+        });
+    });
 };
 
 
@@ -146,6 +132,7 @@ getDatabase()
 // .then(() => queryCollection())
 .catch((error) => { exit(`Completed with error ${JSON.stringify(error)}`) });
 
+//Returning with model to use in index.js
 model.queryCollection = queryCollection;
 model.getCollection = getCollection;
 
