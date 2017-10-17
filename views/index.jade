@@ -22,6 +22,7 @@ html(lang='en')
         script(src='assets/vendor/chart.js/Chart.min.js')
         //script(src='assets/js/sb-admin-charts.min.js')
 
+        //Google map style
         style.
             #map {
                 height: 500px;
@@ -29,7 +30,7 @@ html(lang='en')
             }
 
     body#page-top.fixed-nav.sticky-footer.bg-dark
-        // Navigation
+        // Navigation bar
         nav#mainNav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
             a.navbar-brand(href='/') Akıllı Şantiye
             button.navbar-toggler.navbar-toggler-right(type='button', data-toggle='collapse', data-target='#navbarResponsive', aria-controls='navbarResponsive', aria-expanded='false', aria-label='Toggle navigation')
@@ -271,21 +272,25 @@ html(lang='en')
                 script.
                     $(document).ready(function () {
                         var dataFromDB;
+
+                        //LoadData loads items among data.html page to make dynamic pages.
                         function loadData() {
                             $.ajax({
                                 method: "GET",
                                 url: "data.html",
                                 dataType: "json",
                             }).done(function (data) {
+                                //Line chart can show max 13 values. Send last 13 value to lineChartData.
                                 var lineChartData = []
 
                                 for(var i = 0; i < 13; i++) {
                                     lineChartData[i] = data[data.length - i -1];
                                 }
-                                console.log(lineChartData)
+                                //console.log(lineChartData)
 
+                                //Delete table content.
                                 var $dataTable = $('#tableBody').empty();
-                                var number = 0.001;
+                                var number = 0.001;//To show different locations.
                                 //Returning a new array contains locations values from data array.
                                 initMap(data.map(function (it, i) {
                                     return [i, it.lon + i, it.lat + i];
@@ -304,6 +309,7 @@ html(lang='en')
                                     return it.lat
                                 }))
 
+                                //Creating rows for data
                                 for (var i = 0; i < data.length; i++) {
                                     $dataTable.append(
                                         '<tr class="tableBody">' +
@@ -318,9 +324,11 @@ html(lang='en')
                             })
                         }
 
+                        //load again in every 5 seconds.
                         setInterval(loadData, 5000);
 
 
+                        //Line chart method.
                         function initLineChart(data) {
                             var ctx = document.getElementById("myAreaChart");
                             var myLineChart = new Chart(ctx, {
